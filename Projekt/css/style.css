@@ -1,3 +1,26 @@
-body{
-    font-size: 10px;
+body {
+    background-color: #f5f5f5; /* Jasny beż */
+    color: #333; /* Ciemny tekst */
+}
+
+header {
+    background-color: #88b04b; /* Delikatna zieleń */
+    color: white !important;
+}
+
+.navbar {
+    background-color: #4e9f3d !important; /* Zielona nawigacja */
+}
+
+.navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #88b04b; /* Zmiana koloru na hover */
+}
+
+footer {
+    background-color: #3c703f; /* Ciemniejsza zieleń */
+    color: white;
 }
