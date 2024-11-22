@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Patryk Krzywda">
+    <meta name="description" content="Projekt WWW - Serwis kulinarny">
+    <title>Serwis kulinarny</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="..\..\css\style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="body-wrapper">
+        <div class="content-wrap">
+            <header class="header sticky-top">
+                <!-- Menu nawigacyjne -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container">
+                        <a class="navbar-brand" href="index.html"><img src="..\..\images\logo.png" alt="Logo" height="40"></a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item"><a class="nav-link" href="..\index.html">Strona główna</a></li>
+                                <li class="nav-item"><a class="nav-link" href="..\recipes.html">Przepisy</a></li>
+                                <li class="nav-item"><a class="nav-link" href="..\products.html">Produkty Spożywcze</a></li>
+                                <li class="nav-item"><a class="nav-link" href="..\kalkulator.html">Kalkulator kalorii</a></li>
+                                <li class="nav-item"><a class="nav-link" href="..\login.html"><img src="../../images/login.webp" src="login" height="30"> Zaloguj się</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="container my-5">
+                <div class="row">
+                                    <!-- Przepis: Kurczak z warzywami -->
+                <div class="col-md-6">
+                    <h1>Kurczak z Warzywami</h1>
+                    <p>Pełnowartościowy obiad z pieczonym kurczakiem i kolorowymi warzywami.</p>
+
+                    <!-- Składniki -->
+                    <h3>Składniki:</h3>
+                    <ul>
+                        <li>1 pierś z kurczaka</li>
+                        <li>1 papryka</li>
+                        <li>1 cukinia</li>
+                        <li>1 cebula</li>
+                        <li>Oliwa z oliwek</li>
+                        <li>Przyprawy: sól, pieprz, oregano</li>
+                    </ul>
+
+                    <h3>Przygotowanie:</h3>
+                    <p>1. Kurczaka pokrój na kawałki i przypraw.</p>
+                    <p>2. Pokrój warzywa i wrzuć je na patelnię z rozgrzaną oliwą.</p>
+                    <p>3. Smaż wszystko razem na średnim ogniu przez 10-15 minut.</p>
+                    <p>4. Gotowe! Smacznego!</p>
+                </div>
+
+                <!-- Prawa strona (obrazek i tabela z makro) -->
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="../../images/lunch1.jpeg" alt="Kurczak z warzywami" class="img-fluid mb-4">
+                        </div>
+
+                        <div class="col-12">
+                            <h3>Wartości odżywcze:</h3>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Kalorie (Kcal)</th>
+                                        <th>Tłuszcze</th>
+                                        <th>Węglowodany</th>
+                                        <th>Białko</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>500 kcal</td>
+                                        <td>18 g</td>
+                                        <td>20 g</td>
+                                        <td>45 g</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+        </div>    
+        </div>
+        <!-- Stopka -->
+        <footer class="text-center py-1 sticky-footer">
+            <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Wszelkie prawa zastrzeżone</p>
+        </footer>
+    </div>
+</body>
+</html>

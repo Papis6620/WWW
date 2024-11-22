@@ -11,31 +11,152 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <header class="header sticky-top">
-        <!-- Menu nawigacyjne -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="index.html"><img src="..\images\logo.png" alt="Logo" height="40"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="index.html">Strona główna</a></li>
-                        <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
-                        <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
-                        <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
-                        <li class="nav-item"><a class="nav-link" href="login.html"><img src="../images/login.webp" src="login" height="30"> Zaloguj się</a></li>
-                    </ul>
+    <div class="body-wrapper">
+        <div class="content-wrap">
+            <header class="header sticky-top">
+                <!-- Menu nawigacyjne -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container">
+                        <a class="navbar-brand" href="index.html"><img src="..\images\logo.png" alt="Logo" height="40"></a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item"><a class="nav-link" href="index.html">Strona główna</a></li>
+                                <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
+                                <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
+                                <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
+                                <li class="nav-item"><a class="nav-link" href="login.html"><img src="../images/login.webp" src="login" height="30"> Zaloguj się</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="container my-5">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <aside class="col-lg-3 mb-4 sticky-sidebar">
+                        <div class="card">
+                            <div class="card-header">
+                                Popularne kategorie
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><a class="category" href="#breakfast">Śniadania</a></li>
+                                <li class="list-group-item"><a class="category" href="#lunch">Obiady</a></li>
+                                <li class="list-group-item"><a class="category" href="#dinner">Kolacje</a></li>
+                                <li class="list-group-item"><a class="category" href="#dessert">Desery</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                    <!-- Główna treść -->
+                    <main class="col-lg-9">
+                        <div class="row">
+                            <!-- Sekcja Śniadania -->
+                            <h2 class="title" id="breakfast"><a name="breakfast">Śniadania</a></h2>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/breakfast1.jpeg" class="card-img-top" alt="Owsianka z owocami">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Owsianka z owocami</h5>
+                                        <p class="card-text">Pyszna i zdrowa owsianka z dodatkiem świeżych owoców i orzechów.</p>
+                                        <a href="recipes/recipe1.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/breakfast2.jpg" class="card-img-top" alt="Jajecznica z awokado">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Jajecznica z awokado</h5>
+                                        <p class="card-text">Jajecznica z dodatkiem awokado, pomidorów i ziół - idealne na początek dnia.</p>
+                                        <a href="recipes/recipe2.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sekcja Obiady -->
+                            <h2 class="title" id="lunch"><a name="lunch">Obiady</a></h2>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/lunch1.jpeg" class="card-img-top" alt="Kurczak z warzywami">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Kurczak z warzywami</h5>
+                                        <p class="card-text">Sycący obiad z pieczonym kurczakiem i kolorowymi warzywami.</p>
+                                        <a href="recipes/recipe3.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/lunch2.jpeg" class="card-img-top" alt="Zupa krem z dyni">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Zupa krem z dyni</h5>
+                                        <p class="card-text">Pyszna i rozgrzewająca zupa krem z dyni, idealna na chłodne dni.</p>
+                                        <a href="recipes/recipe4.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sekcja Kolacje -->
+                            <h2 class="title" id="dinner"><a name="dinner">Kolacje</a></h2>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/dinner1.jpg" class="card-img-top" alt="Sałatka z kurczakiem i awokado">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Sałatka z kurczakiem i awokado</h5>
+                                        <p class="card-text">Lekka i zdrowa sałatka z pieczonym kurczakiem, awokado i rukolą.</p>
+                                        <a href="recipes/recipe5.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/dinner2.jpeg" class="card-img-top" alt="Tosty z awokado i jajkiem sadzonym">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Tosty z awokado i jajkiem sadzonym</h5>
+                                        <p class="card-text">Aromatyczne tosty z awokado i jajkiem sadzonym - szybkie i pyszne.</p>
+                                        <a href="recipes/recipe6.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sekcja Desery -->
+                            <h2 class="title" id="dessert"><a name="dessert">Desery</a></h2>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/dessert1.jpg" class="card-img-top" alt="Tarta cytrynowa">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Tarta cytrynowa</h5>
+                                        <p class="card-text">Orzeźwiająca tarta cytrynowa na kruchej podstawie z lekką pianką cytrynową.</p>
+                                        <a href="recipes/recipe7.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <img src="../images/dessert2.jpg" class="card-img-top" alt="Domowe tiramisu">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Domowe tiramisu</h5>
+                                        <p class="card-text">Klasyczny włoski deser z delikatnym kremem mascarpone, biszkoptami i nutą kawy.</p>
+                                        <a href="recipes/recipe8.html" class="btn">Zobacz przepis</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </main>
+                    
                 </div>
             </div>
-        </nav>
-    </header>
+    </div>
+        <!-- Stopka -->
+        <footer class="text-center py-1 sticky-footer">
+            <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Wszelkie prawa zastrzeżone</p>
+        </footer>
 
-    <!-- Stopka -->
-    <footer class="text-center py-1">
-        <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Wszelkie prawa zastrzeżone</p>
-    </footer>
-
+    </div>
 </body>
 </html>

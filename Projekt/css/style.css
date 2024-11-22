@@ -3,6 +3,15 @@ body {
     color: #333; 
 }
 
+.body-wrapper {
+    position: relative;
+    min-height: 100vh;
+}
+
+.content-wrap {
+    padding-bottom: 2.5rem;    /* Footer height */
+}
+
 header {
     background-color: #88b04b; 
     color: white !important;
@@ -17,10 +26,76 @@ header {
 }
 
 .navbar-nav .nav-link:hover {
-    color: #88b04b; 
+    color: #c5ff6f; 
 }
 
 footer {
     background-color: #3c703f; 
     color: white;
 }
+
+.category {
+    text-decoration: none;
+    color:#88b04b;
+}
+
+.card-header{
+    background-color: #4e9f3d;
+    color: white;
+}
+
+.category:hover{
+    color: #5e7936; 
+}
+
+.btn{
+    background-color: #4e9f3d;
+}
+
+.btn:hover{
+    background-color: #68d452;
+}
+
+.card-img-top {
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.title{
+    padding-bottom: 4pt;
+}
+
+.sticky-sidebar {
+    position: sticky; 
+    top: 111.5px;       
+    z-index: 1020;    
+    height: fit-content; 
+}
+
+.sticky-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#breakfast, #lunch, #dessert, #dinner {
+    scroll-margin-top: 80px; 
+}
+
+@media (max-width: 767px) {
+    .sticky-sidebar {
+        position: relative; /* Ustawiamy normalne pozycjonowanie w widoku mobilnym */
+        top: 0; /* Usuwamy efekt "sticky", żeby nie przyklejał się podczas przewijania */
+        width: 100%; /* Pełna szerokość w wersji mobilnej */
+        margin-top: 0; /* Usuwamy marginesy, żeby był bezpośrednio pod navbar'em */
+        z-index: -10; /* Zapewnia, że navbar będzie na wierzchu */
+    }
+}
+
+
+  
+
+  
+
+  

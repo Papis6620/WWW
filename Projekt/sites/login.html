@@ -11,31 +11,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <header class="header sticky-top">
-        <!-- Menu nawigacyjne -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="index.html"><img src="..\images\logo.png" alt="Logo" height="40"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="index.html">Strona główna</a></li>
-                        <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
-                        <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
-                        <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
-                        <li class="nav-item"><a class="nav-link" href="login.html"><img src="../images/login.webp" src="login" height="30"> Zaloguj się</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Stopka -->
-    <footer class="text-center py-1">
-        <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Wszelkie prawa zastrzeżone</p>
-    </footer>
-
+    <div class="body-wrapper">
+        <div class="content-wrap">
+            <header class="header sticky-top">
+                <!-- Menu nawigacyjne -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container">
+                        <a class="navbar-brand" href="index.html"><img src="..\images\logo.png" alt="Logo" height="40"></a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item"><a class="nav-link" href="index.html">Strona główna</a></li>
+                                <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
+                                <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
+                                <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
+                                <li class="nav-item"><a class="nav-link" href="login.html"><img src="../images/login.webp" src="login" height="30"> Zaloguj się</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        </div>    
+        <!-- Stopka -->
+        <footer class="text-center py-1 sticky-footer">
+            <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Wszelkie prawa zastrzeżone</p>
+        </footer>
+    </div>
 </body>
 </html>
