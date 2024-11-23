@@ -17,7 +17,9 @@
                 <!-- Menu nawigacyjne -->
                 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                     <div class="container">
-                        <a class="navbar-brand" href="index.html"><img src="..\images\logo.png" alt="Logo" height="40"></a>
+                        <a class="navbar-brand" href="index.html">
+                            <img src="..\images\logo.png" alt="Logo" height="40">
+                        </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -27,17 +29,117 @@
                                 <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
                                 <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
                                 <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
-                                <li class="nav-item"><a class="nav-link" href="login.html"><img src="../images/login.webp" src="login" height="30"> Zaloguj się</a></li>
+                
+                                <!-- Linki widoczne tylko, jeśli użytkownik jest zalogowany -->
+                                <li class="nav-item nav-link-profile" style="display: none;">
+                                    <a class="nav-link" href="profile.html">
+                                        <img src="../images/login.webp" alt="login" height="30"> Profil
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-link-login" style="display: none;">
+                                    <a class="nav-link" href="login.html">
+                                        <img src="../images/login.webp" alt="login" height="30"> Zaloguj się
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-link-logout" style="display: none;">
+                                    <a class="nav-link" href="/logout">Wyloguj się</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </nav>
             </header>
+            
+            <div class="login-container">
+                <h2 class="text-center mb-4">Zaloguj się</h2>
+                <form action="/login" method="POST" id="loginForm">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adres e-mail</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Wprowadź e-mail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Hasło</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Wprowadź hasło" required>
+                    </div>
+                    <div class="mb-3">
+                        <a href="/register.html" class="register">Nie masz konta? Zarejestruj się</a>
+                    </div>
+                    <div id="responseMessage"></div>
+                    <button type="submit" class="btn">Zaloguj się</button>
+                </form>
+            </div>
+
         </div>    
         <!-- Stopka -->
         <footer class="text-center py-1 sticky-footer">
             <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Wszelkie prawa zastrzeżone</p>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sprawdzamy stan logowania z backendu
+            fetch('/check-login', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    const isLoggedIn = data.isLoggedIn;
+                    const profileLink = document.querySelector('.nav-link-profile');
+                    const loginLink = document.querySelector('.nav-link-login');
+                    const logoutLink = document.querySelector('.nav-link-logout');
+    
+                    if (isLoggedIn) {
+                        profileLink.style.display = 'block';  // Pokaż link do profilu
+                        loginLink.style.display = 'none';     // Ukryj link do logowania
+                        logoutLink.style.display = 'block';   // Pokaż link do wylogowania
+                    } else {
+                        profileLink.style.display = 'none';   // Ukryj link do profilu
+                        loginLink.style.display = 'block';    // Pokaż link do logowania
+                        logoutLink.style.display = 'none';    // Ukryj link do wylogowania
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd podczas sprawdzania stanu logowania:', error);
+                });
+                const urlParams = new URLSearchParams(window.location.search);
+                const message = urlParams.get('message');
+
+                if (message) {
+                    // Jeśli istnieje parametr 'message', wyświetl go w elemencie alertu
+                    const errorMessage = document.getElementById('error-message');
+                    errorMessage.style.display = 'block';
+                    errorMessage.innerText = message;
+                }
+        });
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();  // Zatrzymuje domyślną akcję formularza (przeładowanie strony)
+
+        const formData = new FormData(this);
+        const formObject = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formObject)
+            });
+
+            const result = await response.json(); // Parsowanie odpowiedzi jako JSON
+            const responseMessage = document.getElementById('responseMessage');
+
+            // Obsługuje odpowiedzi o sukcesie i błędach
+            if (response.ok) {
+                responseMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+                window.location.href = '/profile';
+            } else {
+                responseMessage.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+            }
+        } catch (error) {
+            console.error('Błąd podczas logowania:', error);
+            document.getElementById('responseMessage').innerHTML = `<div class="alert alert-danger">Błąd serwera. Spróbuj ponownie później.</div>`;
+        }
+    });
+    </script>
 </body>
 </html>

@@ -1,0 +1,163 @@
+body {
+    background-color: #f5f5f5; 
+    color: #333; 
+}
+
+.body-wrapper {
+    position: relative;
+    min-height: 100vh;
+}
+
+.content-wrap {
+    padding-bottom: 2.5rem;    /* Footer height */
+}
+
+header {
+    background-color: #88b04b; 
+    color: white !important;
+}
+
+.navbar {
+    background-color: #4e9f3d !important; 
+}
+
+.navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #c5ff6f; 
+}
+
+footer {
+    background-color: #3c703f; 
+    color: white;
+}
+
+.category {
+    text-decoration: none;
+    color:#88b04b;
+}
+
+.card-header{
+    background-color: #4e9f3d;
+    color: white;
+}
+
+.category:hover{
+    color: #5e7936; 
+}
+
+.btn{
+    background-color: #4e9f3d;
+}
+
+.btn:hover{
+    background-color: #68d452;
+}
+
+.card-img-top {
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.title{
+    padding-bottom: 4pt;
+}
+
+.sticky-sidebar {
+    position: sticky; 
+    top: 111.5px;       
+    z-index: 1020;    
+    height: fit-content; 
+}
+
+.sticky-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#breakfast, #lunch, #dessert, #dinner {
+    scroll-margin-top: 80px; 
+}
+
+@media (max-width: 767px) {
+    .sticky-sidebar {
+        position: relative; 
+        top: 0; 
+        width: 100%; 
+        margin-top: 0; 
+        z-index: 10; 
+    }
+
+    .sticky-navbar{
+        z-index: 1000;
+    }
+}
+
+.product-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover, .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card{
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card h5 {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.product-card img {
+    border: 3px solid #28a745;
+}
+
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.login-container .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+}
+.login-container .btn{
+    width: 100%;
+}
+.login-container .forgot-password {
+    font-size: 0.9rem;
+    text-align: right;
+}
+.login-container .forgot-password a {
+    text-decoration: none;
+    color: #0d6efd;
+}
+.login-container .forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.register{
+    text-decoration: none;
+    color: #333;
+}
+
+.register:hover{
+    color: grey;
+    text-decoration: underline;
+}
+  
+
+  

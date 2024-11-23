@@ -7,7 +7,7 @@
     <meta name="description" content="Projekt WWW - Serwis kulinarny">
     <title>Serwis kulinarny</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="..\css\style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -17,7 +17,9 @@
                 <!-- Menu nawigacyjne -->
                 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                     <div class="container">
-                        <a class="navbar-brand" href="index.html"><img src="..\images\logo.png" alt="Logo" height="40"></a>
+                        <a class="navbar-brand" href="index.html">
+                            <img src="..\images\logo.png" alt="Logo" height="40">
+                        </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -27,7 +29,21 @@
                                 <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
                                 <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
                                 <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
-                                <li class="nav-item"><a class="nav-link" href="login.html"><img src="../images/login.webp" src="login" height="30"> Zaloguj się</a></li>
+                
+                                <!-- Linki widoczne tylko, jeśli użytkownik jest zalogowany -->
+                                <li class="nav-item nav-link-profile" style="display: none;">
+                                    <a class="nav-link" href="profile.html">
+                                        <img src="../images/login.webp" alt="login" height="30"> Profil
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-link-login" style="display: none;">
+                                    <a class="nav-link" href="login.html">
+                                        <img src="../images/login.webp" alt="login" height="30"> Zaloguj się
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-link-logout" style="display: none;">
+                                    <a class="nav-link" href="/logout">Wyloguj się</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -81,5 +97,31 @@
             <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Patryk Krzywda</p>
         </footer>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sprawdzamy stan logowania z backendu
+            fetch('/check-login', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    const isLoggedIn = data.isLoggedIn;
+                    const profileLink = document.querySelector('.nav-link-profile');
+                    const loginLink = document.querySelector('.nav-link-login');
+                    const logoutLink = document.querySelector('.nav-link-logout');
+    
+                    if (isLoggedIn) {
+                        profileLink.style.display = 'block';  // Pokaż link do profilu
+                        loginLink.style.display = 'none';     // Ukryj link do logowania
+                        logoutLink.style.display = 'block';   // Pokaż link do wylogowania
+                    } else {
+                        profileLink.style.display = 'none';   // Ukryj link do profilu
+                        loginLink.style.display = 'block';    // Pokaż link do logowania
+                        logoutLink.style.display = 'none';    // Ukryj link do wylogowania
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd podczas sprawdzania stanu logowania:', error);
+                });
+        });
+    </script>
 </body>
 </html>

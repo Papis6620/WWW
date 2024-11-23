@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Patryk Krzywda">
+    <meta name="description" content="Projekt WWW - Serwis kulinarny">
+    <title>Serwis kulinarny</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="..\..\css\style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="body-wrapper">
+        <div class="content-wrap">
+            <header class="header sticky-top">
+                <!-- Menu nawigacyjne -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container">
+                        <a class="navbar-brand" href="index.html">
+                            <img src="..\images\logo.png" alt="Logo" height="40">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item"><a class="nav-link" href="index.html">Strona główna</a></li>
+                                <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
+                                <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
+                                <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
+                
+                                <!-- Linki widoczne tylko, jeśli użytkownik jest zalogowany -->
+                                <li class="nav-item nav-link-profile" style="display: none;">
+                                    <a class="nav-link" href="profile.html">
+                                        <img src="../images/login.webp" alt="login" height="30"> Profil
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-link-login" style="display: none;">
+                                    <a class="nav-link" href="login.html">
+                                        <img src="../images/login.webp" alt="login" height="30"> Zaloguj się
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-link-logout" style="display: none;">
+                                    <a class="nav-link" href="/logout">Wyloguj się</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="container my-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>Domowe Tiramisu</h1>
+                        <p>Klasyczny włoski deser z kremem mascarpone i kawą.</p>
+                    
+                        <h3>Składniki:</h3>
+                        <ul>
+                            <li>250 g serka mascarpone</li>
+                            <li>200 ml śmietanki 30%</li>
+                            <li>3 łyżki cukru</li>
+                            <li>200 ml mocnej kawy</li>
+                            <li>200 g biszkoptów</li>
+                            <li>Kakao do posypania</li>
+                        </ul>
+                    
+                        <h3>Przygotowanie:</h3>
+                        <p>1. Ubij śmietankę z cukrem na sztywno, dodaj mascarpone i wymieszaj.</p>
+                        <p>2. Biszkopty zamocz w kawie i układaj w naczyniu warstwami.</p>
+                        <p>3. Przełóż każdą warstwę kremem mascarpone.</p>
+                        <p>4. Wierzch posyp kakao i schłodź w lodówce przez minimum 4 godziny.</p>
+                        <p>5. Gotowe! Smacznego!</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-12">
+                                <img src="../../images/dessert2.jpg" alt="Domowe tiramisu" class="img-fluid mb-4">
+                            </div>
+                            <div class="col-12">
+                                <h3>Wartości odżywcze:</h3>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Kalorie (Kcal)</th>
+                                            <th>Tłuszcze</th>
+                                            <th>Węglowodany</th>
+                                            <th>Białko</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>450 kcal</td>
+                                            <td>28 g</td>
+                                            <td>36 g</td>
+                                            <td>7 g</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+        </div>    
+        </div>
+        <!-- Stopka -->
+        <footer class="text-center py-1 sticky-footer">
+            <p>&copy; 2024 Serwis z przepisami i kalkulatorem kalorii | Wszelkie prawa zastrzeżone</p>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sprawdzamy stan logowania z backendu
+            fetch('/check-login', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    const isLoggedIn = data.isLoggedIn;
+                    const profileLink = document.querySelector('.nav-link-profile');
+                    const loginLink = document.querySelector('.nav-link-login');
+                    const logoutLink = document.querySelector('.nav-link-logout');
+    
+                    if (isLoggedIn) {
+                        profileLink.style.display = 'block';  // Pokaż link do profilu
+                        loginLink.style.display = 'none';     // Ukryj link do logowania
+                        logoutLink.style.display = 'block';   // Pokaż link do wylogowania
+                    } else {
+                        profileLink.style.display = 'none';   // Ukryj link do profilu
+                        loginLink.style.display = 'block';    // Pokaż link do logowania
+                        logoutLink.style.display = 'none';    // Ukryj link do wylogowania
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd podczas sprawdzania stanu logowania:', error);
+                });
+        });
+    </script>
+</body>
+</html>
