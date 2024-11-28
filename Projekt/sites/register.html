@@ -53,8 +53,8 @@
             </header>
 
             <!-- Formularz rejestracji -->
-            <div class="container my-5">
-                <h2>Rejestracja</h2>
+            <div class="login-container">
+                <h2 class="text-center mb-4">Zarejestruj się</h2>
 
                 <!-- Miejsce na komunikat -->
                 <div id="responseMessage"></div>
@@ -76,7 +76,7 @@
                         <label for="confirmPassword" class="form-label">Potwierdź hasło</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Zarejestruj się</button>
+                    <button type="submit" class="btn">Zarejestruj się</button>
                 </form>
             </div>
         </div>
@@ -89,37 +89,71 @@
 
     <script>
         // Obsługuje wysyłanie formularza
-        document.getElementById('registerForm').addEventListener('submit', async function(event) {
-            event.preventDefault();  // Zatrzymuje domyślną akcję formularza (przeładowanie strony)
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sprawdzamy stan logowania z backendu
+            fetch('/check-login', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    const isLoggedIn = data.isLoggedIn;
+                    const profileLink = document.querySelector('.nav-link-profile');
+                    const loginLink = document.querySelector('.nav-link-login');
+                    const logoutLink = document.querySelector('.nav-link-logout');
     
-            const formData = new FormData(this);
-            const formObject = Object.fromEntries(formData.entries());
-    
-            try {
-                const response = await fetch('/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formObject)
+                    if (isLoggedIn) {
+                        profileLink.style.display = 'block';  // Pokaż link do profilu
+                        loginLink.style.display = 'none';     // Ukryj link do logowania
+                        logoutLink.style.display = 'block';   // Pokaż link do wylogowania
+                    } else {
+                        profileLink.style.display = 'none';   // Ukryj link do profilu
+                        loginLink.style.display = 'block';    // Pokaż link do logowania
+                        logoutLink.style.display = 'none';    // Ukryj link do wylogowania
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd podczas sprawdzania stanu logowania:', error);
                 });
-    
-                // Sprawdzamy, czy odpowiedź jest w formacie JSON
-                const result = await response.json(); // Parsowanie odpowiedzi jako JSON
-    
-                const responseMessage = document.getElementById('responseMessage');
-                
-                // Obsługuje odpowiedzi o sukcesie i błędach
-                if (response.ok) {
-                    responseMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-                } else {
-                    responseMessage.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+                const urlParams = new URLSearchParams(window.location.search);
+                const message = urlParams.get('message');
+
+                if (message) {
+                    // Jeśli istnieje parametr 'message', wyświetl go w elemencie alertu
+                    const errorMessage = document.getElementById('error-message');
+                    errorMessage.style.display = 'block';
+                    errorMessage.innerText = message;
                 }
-            } catch (error) {
-                console.error('Błąd podczas rejestracji:', error);
-                document.getElementById('responseMessage').innerHTML = `<div class="alert alert-danger">Błąd serwera.</div>`;
-            }
         });
+        
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+        event.preventDefault();  // Zatrzymuje domyślną akcję formularza (przeładowanie strony)
+
+        const formData = new FormData(this);
+        const formObject = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formObject)
+            });
+
+            // Sprawdzamy, czy odpowiedź jest w formacie JSON
+            const result = await response.json(); // Parsowanie odpowiedzi jako JSON
+
+            const responseMessage = document.getElementById('responseMessage');
+            
+            // Obsługuje odpowiedzi o sukcesie i błędach
+            if (response.ok) {
+                responseMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+            } else {
+                responseMessage.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+            }
+        } catch (error) {
+            console.error('Błąd podczas rejestracji:', error);
+            document.getElementById('responseMessage').innerHTML = `<div class="alert alert-danger">Błąd serwera.</div>`;
+        }
+    });
     </script>
 </body>
 

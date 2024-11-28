@@ -1,14 +1,20 @@
 body {
     background-color: #f5f5f5; 
     color: #333; 
-}
-
-.body-wrapper {
-    position: relative;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
 }
 
+.body-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
 .content-wrap {
+    flex-grow: 1;
     padding-bottom: 2.5rem;    /* Footer height */
 }
 
@@ -32,6 +38,13 @@ header {
 footer {
     background-color: #3c703f; 
     color: white;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.sticky-footer {
+    margin-top: auto;
+    width: 100%;
 }
 
 .category {
@@ -71,12 +84,6 @@ footer {
     top: 111.5px;       
     z-index: 1020;    
     height: fit-content; 
-}
-
-.sticky-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
 }
 
 #breakfast, #lunch, #dessert, #dinner {
@@ -159,5 +166,31 @@ footer {
     text-decoration: underline;
 }
   
+.suggestions {
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 82%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none; /* Ukryte domyślnie */
+}
+.suggestions div {
+    padding: 10px;
+    cursor: pointer;
+}
+.suggestions div:hover {
+    background-color: #f1f1f1;
+}
+ 
+table.table {
+    margin-bottom: 20px; /* Możesz dostosować wartość w zależności od potrzeb */
+}
 
-  
+/* Dodanie odstępu pod tabelą z podsumowaniem */
+#summary {
+    margin-top: 20px; /* Dodaj odstęp powyżej podsumowania */
+}

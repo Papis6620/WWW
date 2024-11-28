@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const User = require('./models/User');  // Załaduj model użytkownika
+const Ingredient = require('./models/Ingredients');  // Załaduj model składnika
 const bodyParser = require('body-parser');  // Używamy body-parser do parsowania danych POST
 const bcrypt = require('bcrypt');
 const session = require('express-session');
@@ -124,6 +125,27 @@ app.get('/check-login', (req, res) => {
           });
   } else {
       res.json({ isLoggedIn: false });  // Użytkownik nie jest zalogowany
+  }
+});
+
+app.get('/api/products', async (req, res) => {
+  try {
+      const products = await Ingredient.find();
+      res.json(products);
+  } catch (error) {
+      res.status(500).json({ error: 'Błąd serwera' });
+  }
+});
+
+app.get('/api/products/search', async (req, res) => {
+  const query = req.query.q; // Zapytanie wyszukiwania z parametru URL
+  try {
+      const products = await Ingredient.find({
+          "Nazwa produktu": { $regex: query, $options: 'i' } // Wyszukiwanie case-insensitive
+      });
+      res.json(products);
+  } catch (error) {
+      res.status(500).json({ error: 'Błąd podczas wyszukiwania produktów' });
   }
 });
 
