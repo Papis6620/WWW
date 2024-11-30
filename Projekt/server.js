@@ -2,10 +2,12 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const User = require('./models/User');  // Załaduj model użytkownika
-const Ingredient = require('./models/Ingredients');  // Załaduj model składnika
+const Ingredient = require('./models/Ingredient');  // Załaduj model składnika
 const bodyParser = require('body-parser');  // Używamy body-parser do parsowania danych POST
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const Meal = require('./models/Meal');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,58 +29,60 @@ app.use(session({
 
 // Trasa rejestracji
 app.post('/register', async (req, res) => {
-  const { username, email, password, confirmPassword } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
 
-  // Walidacja: sprawdzenie, czy hasła się zgadzają
-  if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Hasła nie pasują do siebie' });
-  }
+    // Validate: check if passwords match
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: 'Hasła nie pasują do siebie' });
+    }
 
-  // Sprawdzenie, czy użytkownik już istnieje
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-      return res.status(400).json({ message: 'Użytkownik z tym adresem e-mail już istnieje' });
-  }
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        return res.status(400).json({ message: 'Użytkownik z tym adresem e-mail już istnieje' });
+    }
 
-  // Haszowanie hasła przed zapisaniem
-  const hashedPassword = await bcrypt.hash(password, 10);
+    // Create a new user
+    const user = new User({
+        username,
+        email,
+        passwordHash: password  // Store the plain password temporarily
+    });
 
-  // Tworzenie nowego użytkownika
-  const user = new User({
-      username,
-      email,
-      passwordHash: hashedPassword
-  });
-
-  try {
-      await user.save();
-      res.status(201).json({ message: 'Użytkownik zarejestrowany pomyślnie' });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Błąd serwera. Spróbuj ponownie później' });
-  }
+    try {
+        await user.save();
+        res.status(201).json({ message: 'Użytkownik zarejestrowany pomyślnie' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Błąd serwera. Spróbuj ponownie później' });
+    }
 });
 
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user) {
-      return res.status(400).json({ message: 'Użytkownik nie istnieje' });
-  }
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Użytkownik nie istnieje' });
+        }
 
-  // Sprawdzenie poprawności hasła
-  const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-  if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Niepoprawne hasło' });
-  }
+        // Sprawdzenie poprawności hasła
+        const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Niepoprawne hasło' });
+        }
 
-  // Zapisz dane użytkownika w sesji
-  req.session.userId = user._id;
-  req.session.username = user.username;
+        // Zapisz dane użytkownika w sesji
+        req.session.userId = user._id;
+        req.session.username = user.username;
 
-  // Jeśli logowanie się udało, wyślij odpowiedź sukcesu
-  res.status(200).json({ message: 'Zalogowano pomyślnie' });
+        // Jeśli logowanie się udało, wyślij odpowiedź sukcesu z userId
+        res.status(200).json({ message: 'Zalogowano pomyślnie', userId: user._id });
+    } catch (error) {
+        console.error('Błąd podczas logowania:', error);
+        res.status(500).json({ message: 'Błąd serwera. Spróbuj ponownie później.' });
+    }
 });
 
 // Trasa wylogowywania
@@ -130,10 +134,12 @@ app.get('/check-login', (req, res) => {
 
 app.get('/api/products', async (req, res) => {
   try {
-      const products = await Ingredient.find();
+      // Pobieranie produktów posortowanych alfabetycznie
+      const products = await Ingredient.find().sort({ name: 1 }); // 1 oznacza sortowanie rosnąco (alfabetycznie)
       res.json(products);
   } catch (error) {
-      res.status(500).json({ error: 'Błąd serwera' });
+      console.error(error);
+      res.status(500).json({ message: 'Błąd podczas pobierania produktów' });
   }
 });
 
@@ -147,6 +153,90 @@ app.get('/api/products/search', async (req, res) => {
   } catch (error) {
       res.status(500).json({ error: 'Błąd podczas wyszukiwania produktów' });
   }
+});
+
+app.post('/api/add-product', async (req, res) => {
+  const { name, kcal, protein, fat, carbs } = req.body;
+
+  if (!name || !kcal || !protein || !fat || !carbs) {
+      return res.status(400).json({ success: false, message: 'Wszystkie pola są wymagane' });
+  }
+
+  try {
+      const newIngredient = new Ingredient({
+          name,
+          kcal,
+          protein,
+          fat,
+          carbs
+      });
+
+      await newIngredient.save();
+      res.status(201).json({ success: true, message: 'Produkt dodany pomyślnie' });
+    } catch (error) {
+        console.error('Błąd podczas dodawania produktu:', error);
+        res.status(500).json({ success: false, message: 'Błąd serwera, spróbuj ponownie' });
+    }
+});
+
+app.post('/api/add-meal', (req, res) => {
+    const { userId, name, ingredients } = req.body;
+    const newMeal = new Meal({
+        userId,
+        name,
+        ingredients
+    });
+
+    newMeal.save()
+        .then(meal => res.json({ success: true, meal }))
+        .catch(err => res.status(500).json({ success: false, message: err.message }));
+});
+
+// Get meals for a user
+app.get('/api/meals', (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) {
+        return res.status(401).json({ success: false, message: 'Użytkownik nie jest zalogowany' });
+    }
+    Meal.find({ userId })
+        .then(meals => res.json({ success: true, meals }))
+        .catch(err => res.status(500).json({ success: false, message: err.message }));
+});
+
+app.post('/api/update-user', async (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) {
+        return res.status(401).json({ success: false, message: 'Użytkownik nie jest zalogowany' });
+    }
+
+    const { 'new-email': newEmail, 'new-username': newUsername, 'new-password': newPassword } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Użytkownik nie znaleziony' });
+        }
+
+        if (newEmail){
+            if(User.findById(newEmail)){
+                return res.status(400).json({ success: false, message: 'Użytkownik z tym adresem e-mail już istnieje' });
+            }
+            user.email = newEmail;
+        } 
+        if (newUsername){
+            if(User.findById(newUsername)){
+                return res.status(400).json({ success: false, message: 'Użytkownik z taką nazwą już istnieje' });
+            }
+            user.username = newUsername; 
+        }
+        if (newPassword) user.passwordHash = newPassword;
+            
+        await user.save();
+        res.json({ success: true, message: 'Dane użytkownika zostały zaktualizowane' });
+    } catch (error) {
+        console.error('Błąd podczas aktualizacji danych użytkownika:', error);
+        res.status(500).json({ success: false, message: 'Błąd serwera. Spróbuj ponownie później.' });
+    }
 });
 
 // Połączenie z MongoDB

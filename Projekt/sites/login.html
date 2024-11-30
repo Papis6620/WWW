@@ -130,6 +130,7 @@
 
             // Obsługuje odpowiedzi o sukcesie i błędach
             if (response.ok) {
+                sessionStorage.setItem('userId', result.userId);
                 responseMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
                 window.location.href = '/profile';
             } else {

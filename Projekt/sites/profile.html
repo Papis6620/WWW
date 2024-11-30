@@ -53,6 +53,33 @@
             <div class="container mt-5">
                 <!-- Powitanie użytkownika -->
                 <h1 id="welcome-message"></h1>
+                <div id="profile-options">
+                    <button id="show-meals" class="btn">Pokaż posiłki</button>
+                    <button id="account-settings" class="btn">Ustawienia konta</button>
+                </div>
+                <div id="meals-container" class="mt-4" style="display: none;">
+                    <h2>Twoje posiłki</h2>
+                    <div id="meals-list"></div>
+                </div>
+                <div id="settings-container" class="mt-4" style="display: none;">
+                    <h2>Ustawienia konta</h2>
+                    <form id="settings-form">
+                        <div class="mb-3">
+                            <label for="new-email" class="form-label">Nowy adres e-mail</label>
+                            <input type="email" id="new-email" name="new-email" class="form-control" placeholder="Wprowadź nowy e-mail">
+                        </div>
+                        <div class="mb-3">
+                            <label for="new-username" class="form-label">Nowa nazwa użytkownika</label>
+                            <input type="text" id="new-username" name="new-username" class="form-control" placeholder="Wprowadź nową nazwę użytkownika">
+                        </div>
+                        <div class="mb-3">
+                            <label for="new-password" class="form-label">Nowe hasło</label>
+                            <input type="password" id="new-password" name="new-password" class="form-control" placeholder="Wprowadź nowe hasło">
+                        </div>
+                        <button type="submit" class="btn">Zapisz zmiany</button>
+                    </form>
+                    <div id="settings-response" class="mt-3"></div>
+                </div>
             </div>
 
         </div>    
@@ -92,10 +119,111 @@
                         welcomeMessage.textContent = 'Musisz być zalogowany, aby zobaczyć swój profil.';
                     }
                 })
-                })
                 .catch(error => {
                     console.error('Błąd podczas sprawdzania stanu logowania:', error);
                 });
+
+            document.getElementById('show-meals').addEventListener('click', function() {
+                const mealsContainer = document.getElementById('meals-container');
+                const settingsContainer = document.getElementById('settings-container');
+                const mealsList = document.getElementById('meals-list');
+                mealsContainer.style.display = 'block';
+                settingsContainer.style.display = 'none';
+                mealsList.innerHTML = ''; // Clear previous meals
+
+                const userId = sessionStorage.getItem('userId');
+                fetch(`/api/meals?userId=${userId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            data.meals.forEach(meal => {
+                                const mealDiv = document.createElement('div');
+                                mealDiv.classList.add('meal');
+                                mealDiv.innerHTML = `
+                                    <h3>${meal.name} <button class="btn toggle-button" data-bs-toggle="collapse" data-bs-target="#meal-${meal._id}">+</button></h3>
+                                    <div id="meal-${meal._id}" class="collapse">
+                                        <ul>
+                                            ${meal.ingredients.map(ingredient => `
+                                                <li>${ingredient.name} ${ingredient.weight}g <br>${ingredient.kcal} kcal, ${ingredient.protein}g białka, ${ingredient.fat}g tłuszczy, ${ingredient.carbs}g węglowodanów</li>
+                                            `).join('')}
+                                        </ul>
+                                        <p><strong>Podsumowanie:</strong></p>
+                                        <ul>
+                                            <li>Kalorie: ${meal.ingredients.reduce((sum, ingredient) => sum + ingredient.kcal, 0)} kcal</li>
+                                            <li>Białko: ${meal.ingredients.reduce((sum, ingredient) => sum + ingredient.protein, 0)} g</li>
+                                            <li>Tłuszcz: ${meal.ingredients.reduce((sum, ingredient) => sum + ingredient.fat, 0)} g</li>
+                                            <li>Węglowodany: ${meal.ingredients.reduce((sum, ingredient) => sum + ingredient.carbs, 0)} g</li>
+                                        </ul>
+                                    </div>
+                                `;
+                                mealsList.appendChild(mealDiv);
+                            });
+
+                            // Add event listeners to toggle buttons
+                            document.querySelectorAll('.toggle-button').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const target = document.querySelector(this.getAttribute('data-bs-target'));
+                                    if (target.classList.contains('show')) {
+                                        this.textContent = '+';
+                                    } else {
+                                        this.textContent = '-';
+                                    }
+                                });
+
+                                // Handle the collapse event to toggle the button text
+                                const target = document.querySelector(button.getAttribute('data-bs-target'));
+                                target.addEventListener('shown.bs.collapse', function() {
+                                    button.textContent = '-';
+                                });
+                                target.addEventListener('hidden.bs.collapse', function() {
+                                    button.textContent = '+';
+                                });
+                            });
+                        } else {
+                            mealsList.innerHTML = '<p>Nie udało się pobrać posiłków.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Błąd podczas pobierania posiłków:', error);
+                        mealsList.innerHTML = '<p>Wystąpił błąd podczas pobierania posiłków.</p>';
+                    });
+            });
+
+            document.getElementById('account-settings').addEventListener('click', function() {
+                const mealsContainer = document.getElementById('meals-container');
+                const settingsContainer = document.getElementById('settings-container');
+                mealsContainer.style.display = 'none';
+                settingsContainer.style.display = 'block';
+            });
+
+            document.getElementById('settings-form').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+
+                const formData = new FormData(this);
+                const formObject = Object.fromEntries(formData.entries());
+
+                fetch('/api/update-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formObject)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const settingsResponse = document.getElementById('settings-response');
+                    if (data.success) {
+                        settingsResponse.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                    } else {
+                        settingsResponse.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd podczas aktualizacji danych:', error);
+                    document.getElementById('settings-response').innerHTML = `<div class="alert alert-danger">Błąd serwera. Spróbuj ponownie później.</div>`;
+                });
+            });
+        });
     </script>
 </body>
 </html>

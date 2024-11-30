@@ -29,8 +29,6 @@
                                 <li class="nav-item"><a class="nav-link" href="recipes.html">Przepisy</a></li>
                                 <li class="nav-item"><a class="nav-link" href="products.html">Produkty Spożywcze</a></li>
                                 <li class="nav-item"><a class="nav-link" href="kalkulator.html">Kalkulator kalorii</a></li>
-                
-                                <!-- Linki widoczne tylko, jeśli użytkownik jest zalogowany -->
                                 <li class="nav-item nav-link-profile" style="display: none;">
                                     <a class="nav-link" href="profile.html">
                                         <img src="../images/login.webp" alt="login" height="30"> Profil
@@ -49,56 +47,149 @@
                     </div>
                 </nav>
             </header>
-          
 
-    <div class="container mt-5">
-        <h2>Kalkulator kalorii</h2>
-        <form id="product-form">
-            <div class="mb-3 autocomplete">
-                <label for="product-input" class="form-label">Wpisz nazwę produktu</label>
-                <input type="text" id="product-input" class="form-control" placeholder="Wpisz produkt">
-                <div id="product-suggestions" class="suggestions"></div>
+            <div class="container mt-5">
+                <!-- Linki przełączające między formularzami -->
+                <div class="mb-3 text-center">
+                    <h3>
+                        <a href="#" id="calculator-link" class="action-link active">Kalkulator kalorii</a> | 
+                        <a href="#" id="add-product-link" class="action-link">Dodaj własne produkty</a> | 
+                        <a href="#" id="add-meal-link" class="action-link">Dodaj posiłek</a>
+                    </h3>
+                </div>
+
+                <!-- Formularz kalkulatora kalorii -->
+                <div id="calculator-form">
+                    <form id="product-form">
+                        <div class="mb-3 autocomplete">
+                            <label for="product-input" class="form-label">Wpisz nazwę produktu</label>
+                            <input type="text" id="product-input" class="form-control" placeholder="Wpisz produkt">
+                            <div id="product-suggestions" class="suggestions"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="weight" class="form-label">Waga produktu (g)</label>
+                            <input type="number" class="form-control" id="weight" inputmode="numeric" required>
+                        </div>
+                        <button type="button" class="btn" onclick="addProduct()">Dodaj produkt</button>
+                    </form>
+
+                    <h3 class="mt-4">Wybrane produkty:</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>Waga (g)</th>
+                                <th>Kalorie</th>
+                                <th>Białko</th>
+                                <th>Tłuszcze</th>
+                                <th>Węglowodany</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-table-body">
+                            <!-- Wiersze będą dynamicznie dodawane -->
+                        </tbody>
+                    </table>
+
+                    <h3 class="mt-4">Podsumowanie:</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Kalorie</th>
+                                <th>Białko (g)</th>
+                                <th>Tłuszcze (g)</th>
+                                <th>Węglowodany (g)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-table-body">
+                            <!-- Wiersze będą dynamicznie dodawane -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Formularz dodawania produktów -->
+                <div id="add-product-form" style="display: none;">
+                    <form id="add-product-to-db">
+                        <div class="mb-3">
+                            <label for="product-name" class="form-label">Nazwa produktu</label>
+                            <input type="text" class="form-control" id="product-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="product-kcal" class="form-label">Kalorie (na 100g)</label>
+                            <input type="number" class="form-control" id="product-kcal" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="product-protein" class="form-label">Białko (na 100g)</label>
+                            <input type="number" class="form-control" id="product-protein" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="product-fat" class="form-label">Tłuszcze (na 100g)</label>
+                            <input type="number" class="form-control" id="product-fat" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="product-carbs" class="form-label">Węglowodany (na 100g)</label>
+                            <input type="number" class="form-control" id="product-carbs" required>
+                        </div>
+                        <button type="button" class="btn" onclick="addProductToDB()">Dodaj produkt</button>
+                    </form>
+                </div>
+
+                <div id="add-meal-section" style="display: none;">
+                    <p id="add-meal-info"></p>
+                    <div id="meal-form" style="display: none;">
+                        <form id="add-meal-form">
+                            <div class="mb-3">
+                                <label for="meal-name" class="form-label">Nazwa posiłku</label>
+                                <input type="text" id="meal-name" class="form-control" required>
+                            </div>
+                            <div class="mb-3 autocomplete">
+                                <label for="meal-product-input" class="form-label">Wpisz nazwę produktu</label>
+                                <input type="text" id="meal-product-input" class="form-control" placeholder="Wpisz produkt">
+                                <div id="meal-product-suggestions" class="suggestions"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="meal-weight" class="form-label">Waga produktu (g)</label>
+                                <input type="number" class="form-control" id="meal-weight" inputmode="numeric" required>
+                            </div>
+                            <button type="button" class="btn" onclick="addMealProduct()">Dodaj produkt do posiłku</button>
+                        </form>
+                
+                        <h3 class="mt-4">Produkty w posiłku:</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Produkt</th>
+                                    <th>Waga (g)</th>
+                                    <th>Kalorie</th>
+                                    <th>Białko</th>
+                                    <th>Tłuszcze</th>
+                                    <th>Węglowodany</th>
+                                </tr>
+                            </thead>
+                            <tbody id="meal-product-table-body">
+                                <!-- Wiersze będą dynamicznie dodawane -->
+                            </tbody>
+                        </table>
+                
+                        <h3 class="mt-4">Podsumowanie posiłku:</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Kalorie</th>
+                                    <th>Białko (g)</th>
+                                    <th>Tłuszcze (g)</th>
+                                    <th>Węglowodany (g)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="meal-summary">
+                                <!-- Wiersze będą dynamicznie dodawane -->
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn" onclick="addMeal()">Dodaj posiłek</button>
+                    </div>
+                </div>
+
             </div>
-            <div class="mb-3">
-                <label for="weight" class="form-label">Waga produktu (g)</label>
-                <input type="number" class="form-control" id="weight" inputmode="numeric" required>
-            </div>
-            <button type="button" class="btn" onclick="addProduct()">Dodaj produkt</button>        
-        </form>
-
-        <h3 class="mt-4">Wybrane produkty:</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Produkt</th>
-                    <th>Waga (g)</th>
-                    <th>Kalorie</th>
-                    <th>Białko</th>
-                    <th>Tłuszcze</th>
-                    <th>Węglowodany</th>
-                </tr>
-            </thead>
-            <tbody id="product-table-body">
-                <!-- Wiersze będą dynamicznie dodawane -->
-            </tbody>
-        </table>
-
-        <h3 class="mt-4">Podsumowanie:</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Kalorie</th>
-                    <th>Białko (g)</th>
-                    <th>Tłuszcze (g)</th>
-                    <th>Węglowodany (g)</th>
-                </tr>
-            </thead>
-            <tbody id="summary-table-body">
-                <!-- Wiersze będą dynamicznie dodawane -->
-            </tbody>
-        </table>
-    </div>
-    </div>  
+        </div>
 
         <!-- Stopka -->
         <footer class="text-center py-1 sticky-footer">
@@ -107,6 +198,10 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const addMealSection = document.getElementById('add-meal-section');
+            const addMealInfo = document.getElementById('add-meal-info');
+            const mealForm = document.getElementById('meal-form');
+            
             // Sprawdzamy stan logowania z backendu
             fetch('/check-login', { method: 'GET' })
                 .then(response => response.json())
@@ -120,98 +215,128 @@
                         profileLink.style.display = 'block';  // Pokaż link do profilu
                         loginLink.style.display = 'none';     // Ukryj link do logowania
                         logoutLink.style.display = 'block';   // Pokaż link do wylogowania
+                        addMealInfo.style.display = 'none';
+                        mealForm.style.display = 'block';
                     } else {
                         profileLink.style.display = 'none';   // Ukryj link do profilu
                         loginLink.style.display = 'block';    // Pokaż link do logowania
                         logoutLink.style.display = 'none';    // Ukryj link do wylogowania
+                        addMealInfo.textContent = 'Zaloguj się, żeby dodać posiłek';
+                        addMealInfo.style.display = 'block';
+                        mealForm.style.display = 'none';
                     }
                 })
                 .catch(error => {
                     console.error('Błąd podczas sprawdzania stanu logowania:', error);
                 });
-                const productSelect = document.getElementById('product-select');
-
-            // Pobierz produkty z backendu
-            fetch('/api/products')
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(product => {
-                        const option = document.createElement('option');
-                        option.value = JSON.stringify(product); // Przechowujemy dane jako string
-                        option.textContent = product["Nazwa produktu"];
-                        productSelect.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Błąd podczas pobierania produktów:', error);
-                });    
         });
-
+    
         document.getElementById("weight").addEventListener("input", function (event) {
             this.value = this.value.replace(/[^0-9]/g, ""); // Usuwa wszystkie znaki, które nie są cyframi
         });
+    
         const productCache = {};
-
+    
         document.getElementById('product-input').addEventListener('input', function () {
             const query = this.value;
             const suggestionsContainer = document.getElementById('product-suggestions');
-
+    
             if (query.length < 2) {
                 suggestionsContainer.style.display = 'none'; // Ukryj listę, jeśli tekst jest zbyt krótki
                 return;
             }
-
+    
             // Pobieranie produktów z backendu
             fetch(`/api/products/search?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
                     suggestionsContainer.innerHTML = ''; // Wyczyść listę
-
+    
                     if (data.length === 0) {
                         suggestionsContainer.style.display = 'none'; // Ukryj, jeśli brak wyników
                         return;
                     }
-
+    
                     // Pokaż wyniki
                     suggestionsContainer.style.display = 'block';
-
+    
                     data.forEach(product => {
                         productCache[product["Nazwa produktu"]] = product; // Przechowaj produkt w cache
                         const suggestion = document.createElement('div');
                         suggestion.textContent = product["Nazwa produktu"]; // Wyświetl nazwę produktu
                         suggestion.dataset.product = JSON.stringify(product); // Przechowuj dane produktu
-
+    
                         // Obsługa kliknięcia na podpowiedź
                         suggestion.addEventListener('click', function () {
                             document.getElementById('product-input').value = product["Nazwa produktu"]; // Ustaw wartość w polu input
                             suggestionsContainer.style.display = 'none'; // Ukryj listę
                         });
-
+    
                         suggestionsContainer.appendChild(suggestion);
                     });
                 })
                 .catch(error => console.error('Błąd podczas pobierania produktów:', error));
         });
-
+    
+        document.getElementById('meal-product-input').addEventListener('input', function () {
+            const query = this.value;
+            const suggestionsContainer = document.getElementById('meal-product-suggestions');
+    
+            if (query.length < 2) {
+                suggestionsContainer.style.display = 'none'; // Ukryj listę, jeśli tekst jest zbyt krótki
+                return;
+            }
+    
+            // Pobieranie produktów z backendu
+            fetch(`/api/products/search?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsContainer.innerHTML = ''; // Wyczyść listę
+    
+                    if (data.length === 0) {
+                        suggestionsContainer.style.display = 'none'; // Ukryj, jeśli brak wyników
+                        return;
+                    }
+    
+                    // Pokaż wyniki
+                    suggestionsContainer.style.display = 'block';
+    
+                    data.forEach(product => {
+                        productCache[product["Nazwa produktu"]] = product; // Przechowaj produkt w cache
+                        const suggestion = document.createElement('div');
+                        suggestion.textContent = product["Nazwa produktu"]; // Wyświetl nazwę produktu
+                        suggestion.dataset.product = JSON.stringify(product); // Przechowuj dane produktu
+    
+                        // Obsługa kliknięcia na podpowiedź
+                        suggestion.addEventListener('click', function () {
+                            document.getElementById('meal-product-input').value = product["Nazwa produktu"]; // Ustaw wartość w polu input
+                            suggestionsContainer.style.display = 'none'; // Ukryj listę
+                        });
+    
+                        suggestionsContainer.appendChild(suggestion);
+                    });
+                })
+                .catch(error => console.error('Błąd podczas pobierania produktów:', error));
+        });
+    
         function addProduct() {
             const productInput = document.getElementById('product-input');
             const weightInput = document.getElementById('weight');
             const productTableBody = document.getElementById('product-table-body');
-            const summaryElement = document.getElementById('summary');
-
+    
             const selectedProduct = productCache[productInput.value];
             const weight = parseFloat(weightInput.value);
-
+    
             if (!selectedProduct || isNaN(weight) || weight <= 0) {
                 alert('Wybierz produkt z listy i podaj prawidłową wagę!');
                 return;
             }
-
+    
             const kcal = (selectedProduct.kcal * weight) / 100;
             const białka = (selectedProduct.białka * weight) / 100;
             const tłuszcze = (selectedProduct.tłuszcze * weight) / 100;
             const węglowodany = (selectedProduct.węglowodany * weight) / 100;
-
+    
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${selectedProduct["Nazwa produktu"]}</td>
@@ -222,27 +347,59 @@
                 <td>${węglowodany.toFixed(2)}</td>
             `;
             productTableBody.appendChild(row);
-
+    
             updateSummary();
         }
-
+    
+        function addMealProduct() {
+            const productInput = document.getElementById('meal-product-input');
+            const weightInput = document.getElementById('meal-weight');
+            const mealProductTableBody = document.getElementById('meal-product-table-body');
+    
+            const selectedProduct = productCache[productInput.value];
+            const weight = parseFloat(weightInput.value);
+    
+            if (!selectedProduct || isNaN(weight) || weight <= 0) {
+                alert('Wybierz produkt z listy i podaj prawidłową wagę!');
+                return;
+            }
+    
+            const kcal = (selectedProduct.kcal * weight) / 100;
+            const białka = (selectedProduct.białka * weight) / 100;
+            const tłuszcze = (selectedProduct.tłuszcze * weight) / 100;
+            const węglowodany = (selectedProduct.węglowodany * weight) / 100;
+    
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${selectedProduct["Nazwa produktu"]}</td>
+                <td>${weight}</td>
+                <td>${kcal.toFixed(2)}</td>
+                <td>${białka.toFixed(2)}</td>
+                <td>${tłuszcze.toFixed(2)}</td>
+                <td>${węglowodany.toFixed(2)}</td>
+            `;
+            mealProductTableBody.appendChild(row);
+    
+            updateMealSummary();
+        }
+    
         function updateSummary() {
             const productTableBody = document.getElementById('product-table-body');
             const summaryTableBody = document.getElementById('summary-table-body');
             const allRows = productTableBody.querySelectorAll('tr');
             
             let totalKcal = 0, totalBiałka = 0, totalTłuszcze = 0, totalWęglowodany = 0;
-
+    
             allRows.forEach(row => {
                 totalKcal += parseFloat(row.children[2].textContent);
                 totalBiałka += parseFloat(row.children[3].textContent);
                 totalTłuszcze += parseFloat(row.children[4].textContent);
                 totalWęglowodany += parseFloat(row.children[5].textContent);
             });
-
+    
             // Wyczyść poprzednie podsumowanie
             summaryTableBody.innerHTML = '';
-
+    
             // Dodaj nowe wiersze z podsumowaniem
             const summaryRow = document.createElement('tr');
             summaryRow.innerHTML = `
@@ -252,6 +409,183 @@
                 <td>${totalWęglowodany.toFixed(2)} g</td>
             `;
             summaryTableBody.appendChild(summaryRow);
+        }
+    
+        function updateMealSummary() {
+            const mealProductTableBody = document.getElementById('meal-product-table-body');
+            const allRows = mealProductTableBody.querySelectorAll('tr');
+            
+            let totalKcal = 0, totalBiałka = 0, totalTłuszcze = 0, totalWęglowodany = 0;
+    
+            allRows.forEach(row => {
+                totalKcal += parseFloat(row.children[2].textContent);
+                totalBiałka += parseFloat(row.children[3].textContent);
+                totalTłuszcze += parseFloat(row.children[4].textContent);
+                totalWęglowodany += parseFloat(row.children[5].textContent);
+            });
+    
+            // Wyczyść poprzednie podsumowanie
+            const summaryElement = document.getElementById('meal-summary');
+            summaryElement.innerHTML = '';
+    
+            // Dodaj nowe wiersze z podsumowaniem
+            const summaryRow = document.createElement('tr');
+            summaryRow.innerHTML = `
+                <td>${totalKcal.toFixed(2)} kcal</td>
+                <td>${totalBiałka.toFixed(2)} g</td>
+                <td>${totalTłuszcze.toFixed(2)} g</td>
+                <td>${totalWęglowodany.toFixed(2)} g</td>
+            `;
+            summaryElement.appendChild(summaryRow);
+        }
+    
+        document.getElementById('add-product-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('add-product-form').style.display = 'block';
+            document.getElementById('calculator-form').style.display = 'none';
+            document.getElementById('add-meal-section').style.display = 'none';
+    
+            document.getElementById('add-product-link').classList.add('active');
+            document.getElementById('calculator-link').classList.remove('active');
+            document.getElementById('add-meal-link').classList.remove('active');
+        });
+    
+        document.getElementById('calculator-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('add-product-form').style.display = 'none';
+            document.getElementById('calculator-form').style.display = 'block';
+            document.getElementById('add-meal-section').style.display = 'none';
+    
+            document.getElementById('calculator-link').classList.add('active');
+            document.getElementById('add-product-link').classList.remove('active');
+            document.getElementById('add-meal-link').classList.remove('active');
+        });
+    
+        document.getElementById('add-meal-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('add-product-form').style.display = 'none';
+            document.getElementById('calculator-form').style.display = 'none';
+            document.getElementById('add-meal-section').style.display = 'block';
+    
+            const addMealInfo = document.getElementById('add-meal-info');
+            const mealForm = document.getElementById('meal-form');
+    
+            // Sprawdzamy stan logowania z backendu
+            fetch('/check-login', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    const isLoggedIn = data.isLoggedIn;
+    
+                    if (isLoggedIn) {
+                        addMealInfo.style.display = 'none';
+                        mealForm.style.display = 'block';
+                    } else {
+                        addMealInfo.textContent = 'Zaloguj się, żeby dodać posiłek';
+                        addMealInfo.style.display = 'block';
+                        mealForm.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd podczas sprawdzania stanu logowania:', error);
+                });
+    
+            document.getElementById('add-meal-link').classList.add('active');
+            document.getElementById('add-product-link').classList.remove('active');
+            document.getElementById('calculator-link').classList.remove('active');
+        });
+    
+        function addProductToDB() {
+            const productName = document.getElementById('product-name').value;
+            const productKcal = parseInt(document.getElementById('product-kcal').value);
+            const productProtein = parseFloat(document.getElementById('product-protein').value);
+            const productFat = parseFloat(document.getElementById('product-fat').value);
+            const productCarbs = parseFloat(document.getElementById('product-carbs').value);
+    
+            // Validate the form inputs
+            if (!productName || isNaN(productKcal) || isNaN(productProtein) || isNaN(productFat) || isNaN(productCarbs)) {
+                alert("Wszystkie pola muszą być wypełnione i poprawnie sformatowane!");
+                return;
+            }
+    
+            const productData = {
+                name: productName,
+                kcal: productKcal,
+                protein: productProtein,
+                fat: productFat,
+                carbs: productCarbs
+            };
+    
+            // Send the product data to the server
+            fetch('/api/add-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(productData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Produkt dodany pomyślnie');
+                    document.getElementById('add-product-to-db').reset();
+                } else {
+                    alert('Błąd podczas dodawania produktu: ' + (data.message || 'Nieznany błąd'));
+                }
+            })
+            .catch(error => {
+                console.error('Błąd:', error);
+                alert('Wystąpił problem z dodaniem produktu. Spróbuj ponownie.');
+            });
+        }
+    
+        function addMeal() {
+            const mealName = document.getElementById('meal-name').value;
+            const mealProductTableBody = document.getElementById('meal-product-table-body');
+            const selectedProducts = Array.from(mealProductTableBody.querySelectorAll('tr')).map(row => {
+                return {
+                    name: row.children[0].textContent,
+                    weight: parseFloat(row.children[1].textContent),
+                    kcal: parseFloat(row.children[2].textContent),
+                    protein: parseFloat(row.children[3].textContent),
+                    fat: parseFloat(row.children[4].textContent),
+                    carbs: parseFloat(row.children[5].textContent)
+                };
+            });
+
+            if (!mealName || selectedProducts.length === 0) {
+                alert('Podaj nazwę posiłku i dodaj co najmniej jeden produkt.');
+                return;
+            }
+
+            const mealData = {
+                userId: sessionStorage.getItem('userId'), // Assuming userId is stored in sessionStorage
+                name: mealName,
+                ingredients: selectedProducts
+            };
+
+            // Dodanie posiłku do profilu użytkownika
+            fetch('/api/add-meal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(mealData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Posiłek dodany pomyślnie.');
+                        document.getElementById('add-meal-form').reset();
+                        document.getElementById('meal-product-table-body').innerHTML = ''; // Clear the table
+                        updateMealSummary(); // Clear the summary
+                    } else {
+                        alert('Błąd podczas dodawania posiłku: ' + (data.message || 'Nieznany błąd.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd podczas dodawania posiłku:', error);
+                    alert('Wystąpił problem. Spróbuj ponownie.');
+                });
         }
     </script>
 </body>
