@@ -218,10 +218,14 @@ app.post('/api/update-user', async (req, res) => {
         }
 
         if (newEmail){
-            if(User.findById(newEmail)){
+            if(newEmail === user.email){
+                return res.status(400).json({ success: false, message: 'Podano ten sam e-mail' });
+            }else if(User.findById(newEmail)){
                 return res.status(400).json({ success: false, message: 'Użytkownik z tym adresem e-mail już istnieje' });
             }
-            user.email = newEmail;
+            else{
+                user.email = newEmail;
+            }
         } 
         if (newUsername){
             if(User.findById(newUsername)){
@@ -230,6 +234,10 @@ app.post('/api/update-user', async (req, res) => {
             user.username = newUsername; 
         }
         if (newPassword) user.passwordHash = newPassword;
+            
+        if (!newEmail && !newUsername && !newPassword) {
+            return res.status(400).json({ success: false, message: 'Brak danych do aktualizacji' });
+        }
             
         await user.save();
         res.json({ success: true, message: 'Dane użytkownika zostały zaktualizowane' });
