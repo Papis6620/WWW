@@ -220,18 +220,22 @@ app.post('/api/update-user', async (req, res) => {
         if (newEmail){
             if(newEmail === user.email){
                 return res.status(400).json({ success: false, message: 'Podano ten sam e-mail' });
-            }else if(User.findById(newEmail)){
+            } 
+            const existingEmailUser = await User.findOne({ email: newEmail });
+            if (existingEmailUser) {
                 return res.status(400).json({ success: false, message: 'Użytkownik z tym adresem e-mail już istnieje' });
             }
-            else{
-                user.email = newEmail;
-            }
+            user.email = newEmail;
         } 
         if (newUsername){
-            if(User.findById(newUsername)){
+            if (newUsername === user.username) {
+                return res.status(400).json({ success: false, message: 'Podano tę samą nazwę użytkownika' });
+            }
+            const existingUsernameUser = await User.findOne({ username: newUsername });
+            if (existingUsernameUser) {
                 return res.status(400).json({ success: false, message: 'Użytkownik z taką nazwą już istnieje' });
             }
-            user.username = newUsername; 
+            user.username = newUsername;
         }
         if (newPassword) user.passwordHash = newPassword;
             

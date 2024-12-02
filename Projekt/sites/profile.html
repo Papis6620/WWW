@@ -229,6 +229,11 @@
                     const settingsResponse = document.getElementById('settings-response');
                     if (data.success) {
                         settingsResponse.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                        if (formObject['new-username']) {
+                            document.getElementById('welcome-message').textContent = `Witaj, ${formObject['new-username']}!`;
+                        }
+                        // Reset the form
+                        document.getElementById('settings-form').reset();
                     } else {
                         settingsResponse.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
                     }
