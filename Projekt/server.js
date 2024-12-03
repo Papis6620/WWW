@@ -1,4 +1,5 @@
 const express = require('express');
+const http = require('http');
 const path = require('path');
 const mongoose = require('mongoose');
 const User = require('./models/User');  // Załaduj model użytkownika
@@ -27,7 +28,37 @@ app.use(session({
   cookie: { secure: false } // Użyj true, jeśli masz HTTPS
 }));
 
-// Trasa rejestracji
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'sites', 'index.html'));
+});
+
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Użytkownik nie istnieje' });
+        }
+
+        // Sprawdzenie poprawności hasła
+        const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Niepoprawne hasło' });
+        }
+
+        // Zapisz dane użytkownika w sesji
+        req.session.userId = user._id;
+        req.session.username = user.username;
+
+        // Jeśli logowanie się udało, wyślij odpowiedź sukcesu z userId
+        res.status(200).json({ message: 'Zalogowano pomyślnie', userId: user._id });
+    } catch (error) {
+        console.error('Błąd podczas logowania:', error);
+        res.status(500).json({ message: 'Błąd serwera. Spróbuj ponownie później.' });
+    }
+});
+
 app.post('/register', async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
 
@@ -58,41 +89,24 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: 'Użytkownik nie istnieje' });
-        }
-
-        // Sprawdzenie poprawności hasła
-        const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Niepoprawne hasło' });
-        }
-
-        // Zapisz dane użytkownika w sesji
-        req.session.userId = user._id;
-        req.session.username = user.username;
-
-        // Jeśli logowanie się udało, wyślij odpowiedź sukcesu z userId
-        res.status(200).json({ message: 'Zalogowano pomyślnie', userId: user._id });
-    } catch (error) {
-        console.error('Błąd podczas logowania:', error);
-        res.status(500).json({ message: 'Błąd serwera. Spróbuj ponownie później.' });
-    }
-});
-
 // Trasa wylogowywania
 app.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-      if (err) {
-          return res.status(500).send('Błąd wylogowywania');
-      }
-      res.redirect('/');
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Błąd wylogowywania');
+        }
+        res.redirect('/');
+    });
   });
+
+// Strona profilu
+app.get('/profile', (req, res) => {
+    if (!req.session.userId) {
+      return res.redirect('/login'); // Jeśli użytkownik nie jest zalogowany, przekieruj do logowania
+    }
+  
+    // Przekazujemy dane użytkownika
+    res.sendFile(path.join(__dirname, 'sites', 'profile.html'));
 });
 
 // Middleware do sprawdzania stanu logowania
@@ -102,40 +116,24 @@ app.use((req, res, next) => {
   next();
 });
 
-// Strona główna
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'sites', 'index.html')); // Ścieżka do pliku index.html
-});
-
-// Strona profilu
-app.get('/profile', (req, res) => {
-  if (!req.session.userId) {
-    return res.redirect('/login'); // Jeśli użytkownik nie jest zalogowany, przekieruj do logowania
-  }
-
-  // Przekazujemy dane użytkownika
-  res.sendFile(path.join(__dirname, 'sites', 'profile.html'));
-});
-
 app.get('/check-login', (req, res) => {
   if (req.session.userId) {
       User.findById(req.session.userId)
           .then(user => {
-              res.json({ isLoggedIn: true, username: user.username });  // Zwróć imię użytkownika
+              res.json({ isLoggedIn: true, username: user.username });
           })
           .catch(err => {
               console.error('Błąd pobierania danych użytkownika:', err);
               res.json({ isLoggedIn: false });
           });
   } else {
-      res.json({ isLoggedIn: false });  // Użytkownik nie jest zalogowany
+      res.json({ isLoggedIn: false });
   }
 });
 
 app.get('/api/products', async (req, res) => {
   try {
-      // Pobieranie produktów posortowanych alfabetycznie
-      const products = await Ingredient.find().sort({ name: 1 }); // 1 oznacza sortowanie rosnąco (alfabetycznie)
+      const products = await Ingredient.find().sort({ name: 1 });
       res.json(products);
   } catch (error) {
       console.error(error);
@@ -144,10 +142,10 @@ app.get('/api/products', async (req, res) => {
 });
 
 app.get('/api/products/search', async (req, res) => {
-  const query = req.query.q; // Zapytanie wyszukiwania z parametru URL
+  const query = req.query.q;
   try {
       const products = await Ingredient.find({
-          "Nazwa produktu": { $regex: query, $options: 'i' } // Wyszukiwanie case-insensitive
+          "Nazwa produktu": { $regex: query, $options: 'i' }
       });
       res.json(products);
   } catch (error) {
@@ -192,7 +190,6 @@ app.post('/api/add-meal', (req, res) => {
         .catch(err => res.status(500).json({ success: false, message: err.message }));
 });
 
-// Get meals for a user
 app.get('/api/meals', (req, res) => {
     const userId = req.session.userId;
     if (!userId) {
@@ -261,7 +258,9 @@ mongoose.connect('mongodb://localhost:27017/Project', {
     console.error('Błąd połączenia z MongoDB:', error);
 });
 
+const server = http.createServer(app);
+
 // Uruchomienie serwera
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Serwer działa na porcie ${PORT}`);
 });
