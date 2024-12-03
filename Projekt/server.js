@@ -162,11 +162,11 @@ app.post('/api/add-product', async (req, res) => {
 
   try {
       const newIngredient = new Ingredient({
-          name,
+          "Nazwa produktu": name,
           kcal,
-          protein,
-          fat,
-          carbs
+          "białka": protein,
+          "tłuszcze": fat,
+          "węglowodany": carbs
       });
 
       await newIngredient.save();
